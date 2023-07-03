@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::thread;
+use rand::thread_rng;
+use rand::seq::SliceRandom;
 
 fn d(n: i64, k: i64) -> i8 {
     let mut seen: HashMap<i64, i64> = HashMap::new();
@@ -22,19 +24,23 @@ fn d(n: i64, k: i64) -> i8 {
 
 fn s(n: i64, ks: Vec<i64>) -> i64 {
     let mut sum = 0;
+    let mut idx = 0;
     for k in ks.iter() {
-        if k % 10000 == 0 {
-            println!("{:?}", k);
+        if idx % 1000 == 0 {
+            println!("{:?}", idx);
         }
         sum += d(n, *k) as i64;
+        idx += 1;
     }
     return sum;
 }
 
 fn calc(n: i64) -> i64 {
-    let ks: Vec<i64> = (1..n + 1).collect();
+    let mut ks: Vec<i64> = (1..n + 1).collect();
+    ks.shuffle(&mut thread_rng());
     let workers = thread::available_parallelism().unwrap().get();
     let mut results: Vec<thread::JoinHandle<i64>> = Vec::new();
+
     for chunk in ks.chunks((ks.len() - 1) / workers + 1).map(|c| c.to_vec()) {
         results.push(thread::spawn(move || {
             return s(n, chunk.to_vec());

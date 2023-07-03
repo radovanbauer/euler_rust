@@ -86,7 +86,7 @@ enum QuadTree {
 }
 
 impl QuadTree {
-    fn newNode(rect: Rect, t1: QuadTree, t2: QuadTree, t3: QuadTree, t4: QuadTree) -> QuadTree {
+    fn new_node(rect: Rect, t1: QuadTree, t2: QuadTree, t3: QuadTree, t4: QuadTree) -> QuadTree {
         return QuadTree::Node {
             rect: rect,
             t1: Box::new(t1),
@@ -125,7 +125,7 @@ impl QuadTree {
         let p2 = points.iter().filter(|p| r2.contains(p)).cloned().collect();
         let p3 = points.iter().filter(|p| r3.contains(p)).cloned().collect();
         let p4 = points.iter().filter(|p| r4.contains(p)).cloned().collect();
-        return QuadTree::newNode(
+        return QuadTree::new_node(
             rect,
             QuadTree::construct(r1, p1, max_size),
             QuadTree::construct(r2, p2, max_size),
